@@ -20,6 +20,11 @@ var tNew = 0, tNewCount = 0, fNew = 0, fIn = 0; autoplay = 0, comments = 0, view
 var trackData = [[], [], [], []];
 var favData = [[], [], [], []];
 var token, limit, intTimer, buffered, buffTimer, current = 0, linkcount, inc;
+var trackTypeMapping = {
+    "incoming": "/me/activities/tracks/affiliated?",
+    "hot": "/tracks?order=hotness",
+    "recent": "/tracks?order=created_at"
+};
 
 // Connect to SoundCloud, setup for latest track fetching
 function initialize(fetch, inToken, inLimit, inInterval) {
@@ -55,9 +60,10 @@ initialize(0, localStorage.token, localStorage.limit, localStorage.interval);
 function fetchTracks(notify, more) {
 	if (notify === null) { notify = 1; }
 	if (more !== 1) {
-		SC.get("/me/activities/tracks/affiliated?limit=" + limit, function (activities) {
-			$.each(activities.collection, function () {
-				var track = this.origin;
+		SC.get(trackTypeMapping[localStorage.type] + "&limit=" + limit + "&filter=streamable", function (activities) {
+			$.each((activities instanceof Array) ? activities : activities.collection, function () {
+                
+				var track = (this.origin) ? this.origin : this;
 				if (track.title !== undefined) {
 					var trackString = formatTrack(track.title, track.user.username, track.waveform_url,
 										track.permalink_url, track.artwork_url, track.download_url,

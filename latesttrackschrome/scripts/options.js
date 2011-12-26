@@ -8,6 +8,7 @@ function loadOptions() {
 	if (localStorage.token) {
 		$("#token").val(localStorage.token);
 		$("#limit").val(localStorage.limit);
+        $("#type").val(localStorage.type);
 		$("#interval").val(localStorage.interval);
 		$("#comopt").val(localStorage.comopt);
 		if (localStorage.autoplay === 1) {
@@ -21,11 +22,15 @@ function saveOptions() {
 	var error = "Error:";
 	var token = $("#token").val();
 	var limit = $("#limit").val();
+    var type = $("#type").val();
 	var interval = $("#interval").val();
 	var comopt = $("#comopt").val();
 	if (token !== "") {
 		localStorage.token = token;
 	}
+    if (type !== "") {
+        localStorage.type = type;
+    }
 	else {
 		error = error + " missing token,";
 	}
